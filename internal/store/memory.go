@@ -78,8 +78,8 @@ func (m *Memory) ListPending(subscriber string) []model.Delivery {
 	return out
 }
 func (m *Memory) AckDelivery(id string) error {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	d, ok := m.deliveries[id]
 	if !ok {
 		return model.ErrNotFound
