@@ -94,7 +94,7 @@ func (m *Memory) AckDelivery(id string) error {
 func (m *Memory) PublishSnapshot(s model.Snapshot) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.snapshots[s.Stream] = s
+	m.snapshots[s.Stream] = cloneSnapshot(s)
 	return nil
 }
 func (m *Memory) LatestSnapshot(stream string) (model.Snapshot, error) {

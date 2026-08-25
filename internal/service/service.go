@@ -78,7 +78,7 @@ func (s *Service) PublishSnapshot(ctx context.Context, stream string, version in
 		return model.Snapshot{}, ctx.Err()
 	default:
 	}
-	snap := model.Snapshot{Stream: stream, Version: version, Values: values, CreatedAt: s.ids.Now()}
+	snap := model.Snapshot{Stream: stream, Version: version, Values: clone(values), CreatedAt: s.ids.Now()}
 	return snap, s.snapshots.PublishSnapshot(snap)
 }
 func (s *Service) LatestSnapshot(ctx context.Context, stream string) (model.Snapshot, error) {
