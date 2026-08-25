@@ -56,7 +56,6 @@ func (m *Memory) ListSubscriptions(stream, eventType string) []model.Subscriptio
 	for _, s := range m.subscriptions {
 		if s.Stream == stream && (s.EventType == eventType || s.EventType == "*") {
 			out = append(out, s)
-			return out
 		}
 	}
 	return out
