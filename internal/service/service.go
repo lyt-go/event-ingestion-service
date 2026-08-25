@@ -51,7 +51,17 @@ func (s *Service) Subscribe(ctx context.Context, subscriber, stream, eventType s
 	default:
 	}
 	sub := model.Subscription{ID: s.ids.Next(), Subscriber: subscriber, Stream: stream, EventType: eventType}
-	return sub, s.subs.SaveSubscription(sub)
+	if err := s.subs.SaveSubscription(sub); err != nil {
+		return model.Subscription{}, err
+	}
+	// The save may have completed after the caller cancelled the request.
+	// Report the cancellation so the caller knows the subscribe did not finish.
+	select {
+	case <-ctx.Done():
+		return model.Subscription{}, ctx.Err()
+	default:
+	}
+	return sub, nil
 }
 func (s *Service) Pending(ctx context.Context, subscriber string) ([]model.Delivery, error) {
 	select {
